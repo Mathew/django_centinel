@@ -1,0 +1,174 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Usage &mdash; django_centinel 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="django_centinel 0.1.0 documentation" href="index.html" />
+    <link rel="next" title="Auto Generated Documentation" href="code.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="code.html" title="Auto Generated Documentation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">django_centinel 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
+<p>Create the correspoding views:</p>
+<div class="section" id="success">
+<h2>Success<a class="headerlink" href="#success" title="Permalink to this headline">¶</a></h2>
+<p>Send these along with the card details to the payment gateway being used.</p>
+<div class="highlight-python"><pre>def centinel_success(request, order_id, secure_dict, card_details):</pre>
+</div>
+<p>The secure_dict contains the information to be sent along with the card details in your request. card_details is a dict containg the information the user entered into your site to begin with which Centinel have authorised.  Use order_id to grab order information to send the amount, items etc. along with the payment request.</p>
+</div>
+<div class="section" id="error">
+<h2>Error<a class="headerlink" href="#error" title="Permalink to this headline">¶</a></h2>
+<p>In this view you can decide to prompt for another payment type/card, informing the user their current method has been declined.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">centinel_paypal_pro_error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">error</span><span class="p">):</span>
+
+     <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;error.html&#39;</span><span class="p">,</span> <span class="p">{</span>
+
+     <span class="p">},</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-the-django-centinel-library">
+<h2>Using the django_centinel library<a class="headerlink" href="#using-the-django-centinel-library" title="Permalink to this headline">¶</a></h2>
+<p>Send the centinel object card details in a dictionary, and in a seperate one the order details, amount in pence and the ordernumber currently associated with the user&#8217;s purchase.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># The data dictionary must contain the amount in pence.</span>
+<span class="n">data_dict</span><span class="o">=</span><span class="p">{</span>
+    <span class="s">&quot;Amount&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">cart</span><span class="o">.</span><span class="n">total</span><span class="o">*</span><span class="mi">100</span><span class="p">),</span>
+    <span class="s">&quot;CurrencyCode&quot;</span><span class="p">:</span> <span class="s">&quot;826&quot;</span><span class="p">,</span>
+    <span class="s">&quot;OrderNumber&quot;</span><span class="p">:</span> <span class="n">order_id</span>
+<span class="p">}</span>
+
+<span class="c">#The following card details</span>
+<span class="n">card_details</span><span class="o">=</span><span class="p">{</span>
+    <span class="s">&quot;CardNumber&quot;</span><span class="p">:</span> <span class="s">&quot;1234567891234567&quot;</span><span class="p">,</span>
+    <span class="s">&quot;CardExpDate&quot;</span><span class="p">:</span> <span class="s">&quot;0812&quot;</span><span class="p">,</span>
+    <span class="s">&quot;CardStartDate&quot;</span><span class="p">:</span> <span class="s">&quot;0111&quot;</span><span class="p">,</span>
+    <span class="s">&quot;CardSecCode&quot;</span><span class="p">:</span> <span class="s">&quot;123&quot;</span><span class="p">,</span>
+    <span class="s">&quot;CardIssue&quot;</span><span class="p">:</span> <span class="s">&quot;02&quot;</span>
+        <span class="p">}</span>
+
+<span class="n">cent</span> <span class="o">=</span> <span class="n">Centinel</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">centinel_paypal_pro_process</span><span class="p">,</span> <span class="s">&#39;centinel_form.html&#39;</span><span class="p">)</span>
+
+<span class="c">#return the response which allows centinel to take the next step.</span>
+<span class="k">return</span> <span class="n">cent</span><span class="o">.</span><span class="n">centinel_lookup</span><span class="p">(</span><span class="n">data_dict</span><span class="p">,</span> <span class="n">card_details</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Usage</a><ul>
+<li><a class="reference internal" href="#success">Success</a></li>
+<li><a class="reference internal" href="#error">Error</a></li>
+<li><a class="reference internal" href="#using-the-django-centinel-library">Using the django_centinel library</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="previous chapter">Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="code.html"
+                        title="next chapter">Auto Generated Documentation</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/usage.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="code.html" title="Auto Generated Documentation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             >previous</a> |</li>
+        <li><a href="index.html">django_centinel 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Mathew Taylor.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

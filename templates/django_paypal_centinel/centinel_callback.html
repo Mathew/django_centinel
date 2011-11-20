@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+
+<script>
+	window.parent.authFinished('finished');
+</script>
+
+<input type="hidden" name="pa_res" id="pa_res" />
+
+<p>Redirecting...</p>
+
+{% endblock %}

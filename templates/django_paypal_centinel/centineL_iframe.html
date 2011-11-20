@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+<script>
+function authFinished(val)
+{
+	document.frmFinish.submit();
+	pa_input = document.getElementById('pa_res');
+	pa_input.set(val);
+}
+</script>
+
+<FORM onload="document.frmLaunch.submit();" name="frmLaunch" method="POST" target="merchant-auth" action="{{ centinel_auth_url }}">
+	{{ centinel_form }}
+</form>
+
+<iframe name="merchant-auth" src="{{ acs_url }}" width="400px" height="400px" frameborder="0">
+</iframe>
+
+<form name="frmFinish" method="POST" action="">
+{{ card_details_form }}
+</form>
+
+<div onload="document.frmLaunch.submit();" name="frmLaunch"></div>
+
+{% endblock %}

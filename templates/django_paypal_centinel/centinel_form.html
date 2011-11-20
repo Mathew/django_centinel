@@ -1,0 +1,13 @@
+{% extends "site_base.html" %}
+
+{% block content %}
+
+<FORM onload="document.frmLaunch.submit();" name="frmLaunch" method="POST" action="{{ centinel_auth_url }}">
+
+	{{ centinel_form }}
+
+</FORM>
+
+<div></div>
+
+{% endblock %}
